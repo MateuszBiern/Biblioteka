@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import './BookPage.css'
-import BookRating from '../BookRating/BookRating'
 
 type Chapter = { id: number; title: string; book_id: number }
 type Book = {
@@ -25,39 +24,39 @@ const BookPage: React.FC = () => {
 	const [chapterLoading, setChapterLoading] = useState(false)
 	const [error, setError] = useState<string | null>(null)
 
-	// Pobierz książkę i listę rozdziałów
+	// Pobierz książkę i listę chapterów
 	useEffect(() => {
 		if (!id) return
 
 		setLoading(true)
 		setError(null)
 
-		const fetchBook = fetch(`http://localhost/biblioteka/books.php`)
+		// fetch książki
+		fetch(`http://localhost/biblioteka/books.php`)
 			.then(res => {
 				if (!res.ok) throw new Error('Błąd sieci')
 				return res.json()
 			})
 			.then(data => {
 				const found = data.find((b: any) => Number(b.id) === Number(id))
-				if (found) {
-					setBook(found)
-				} else {
-					throw new Error('Książka nie znaleziona')
-				}
+				if (found) setBook(found)
+				else setError('Książka nie znaleziona')
+			})
+			.catch(err => {
+				console.error('Błąd fetch książki:', err)
+				setError('Błąd pobierania książki')
 			})
 
-		const fetchChapters = fetch(`http://localhost/biblioteka/book_chapters.php?bookId=${id}`)
+		// fetch chapterów dla książki
+		fetch(`http://localhost/biblioteka/book_chapters.php?bookId=${id}`)
 			.then(res => {
 				if (!res.ok) throw new Error('Błąd sieci')
 				return res.json()
 			})
-			.then(data => setChapters(data || []))
-
-		// Czekaj na oba zapytania
-		Promise.all([fetchBook, fetchChapters])
+			.then(data => setChapters(data))
 			.catch(err => {
-				console.error('Błąd fetch:', err)
-				setError(err.message || 'Błąd pobierania danych')
+				console.error('Błąd fetch chapterów:', err)
+				setChapters([])
 			})
 			.finally(() => setLoading(false))
 	}, [id])
@@ -69,24 +68,10 @@ const BookPage: React.FC = () => {
 			return
 		}
 
-		// Czekaj aż rozdziały się załadują
-		if (chapters.length === 0) {
-			return
-		}
-
 		setChapterLoading(true)
 		setError(null)
 
-		// Najpierw znajdź info o rozdziale z już pobranej listy
-		const chapterInfo = chapters.find(ch => ch.id === parseInt(chapterId))
-
-		if (!chapterInfo) {
-			setError('Rozdział nie znaleziony w liście')
-			setChapterLoading(false)
-			setChapter(null)
-			return
-		}
-
+		// Zmieniony endpoint na chapter_content.php
 		fetch(`http://localhost/biblioteka/chapter_content.php?chapterId=${chapterId}`)
 			.then(res => {
 				if (!res.ok) throw new Error('Błąd sieci')
@@ -94,13 +79,33 @@ const BookPage: React.FC = () => {
 			})
 			.then(data => {
 				if (data && data.content) {
-					setChapter({
-						id: data.id,
-						title: chapterInfo.title,
-						content: data.content,
-					})
+					// Musimy też pobrać tytuł rozdziału
+					const chapterInfo = chapters.find(ch => ch.id === parseInt(chapterId))
+					if (chapterInfo) {
+						setChapter({
+							id: data.id,
+							title: chapterInfo.title,
+							content: data.content,
+						})
+					} else {
+						// Jeśli nie mamy tytułu, pobierz go osobno
+						fetch(`http://localhost/biblioteka/book_chapters.php?id=${chapterId}`)
+							.then(res => res.json())
+							.then(chapterData => {
+								if (chapterData && chapterData.title) {
+									setChapter({
+										id: data.id,
+										title: chapterData.title,
+										content: data.content,
+									})
+								} else {
+									setError('Nie znaleziono informacji o rozdziale')
+								}
+							})
+					}
 				} else {
-					throw new Error('Brak treści rozdziału')
+					setError('Chapter nie znaleziony lub brak treści')
+					setChapter(null)
 				}
 			})
 			.catch(err => {
@@ -112,7 +117,7 @@ const BookPage: React.FC = () => {
 	}, [chapterId, chapters])
 
 	if (loading) return <p>Ładowanie książki...</p>
-	if (error && !book) return <p>Błąd: {error}</p>
+	if (error) return <p>Błąd: {error}</p>
 	if (!book) return <p>Książka nie znaleziona</p>
 
 	return (
@@ -135,26 +140,26 @@ const BookPage: React.FC = () => {
 							/>
 						)}
 					</div>
+					<p>{book.description}</p>
 				</div>
-				<BookRating bookId={book.id} />
+
 				<div style={{ marginTop: '10px', display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
-					{book.tags &&
-						book.tags.map(tag => (
-							<Link
-								key={tag}
-								to={`/SearchPage?tags=${tag}`}
-								style={{
-									background: '#4CAF50',
-									color: 'white',
-									padding: '4px 12px',
-									borderRadius: '20px',
-									fontSize: '12px',
-									fontWeight: '500',
-									textDecoration: 'none',
-								}}>
-								{tag}
-							</Link>
-						))}
+					{book.tags.map(tag => (
+						<Link
+							key={tag}
+							to={`/SearchPage?tags=${tag}`}
+							style={{
+								background: '#4CAF50',
+								color: 'white',
+								padding: '4px 12px',
+								borderRadius: '20px',
+								fontSize: '12px',
+								fontWeight: '500',
+								textDecoration: 'none',
+							}}>
+							{tag}
+						</Link>
+					))}
 				</div>
 				<h3>Rozdziały:</h3>
 				{chapters.length > 0 ? (
@@ -168,29 +173,18 @@ const BookPage: React.FC = () => {
 				) : (
 					<p>Brak dostępnych rozdziałów</p>
 				)}
-
+				{chapter && (
+					<div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#f0f0f0' }}>
+						<h4>{chapter.title}</h4>
+						<p style={{ whiteSpace: 'pre-line' }}>{chapter.content}</p>
+					</div>
+				)}
 				{/* Stan ładowania dla chaptera */}
 				{chapterLoading && (
 					<div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#fff3cd', border: '1px solid #ffeaa7' }}>
 						<p>Ładowanie treści rozdziału...</p>
 					</div>
 				)}
-
-				{/* Treść rozdziału */}
-				{chapter && !chapterLoading && (
-					<div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#f0f0f0' }}>
-						<h4>{chapter.title}</h4>
-						<p style={{ whiteSpace: 'pre-line' }}>{chapter.content}</p>
-					</div>
-				)}
-
-				{/* Błąd przy ładowaniu rozdziału */}
-				{error && chapterId && !chapterLoading && (
-					<div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#ffebee', border: '1px solid #ef5350' }}>
-						<p>{error}</p>
-					</div>
-				)}
-
 				<div style={{ marginTop: '20px' }}>
 					<Link to="/">⬅ Wróć do karuzeli</Link>
 				</div>

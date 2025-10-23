@@ -25,10 +25,7 @@ const Carusel: React.FC = () => {
 					console.error('Błąd PHP:', data.error)
 					return
 				}
-				const shuffled = data.sort(() => 0.5 - Math.random())
-				const randomBooks = shuffled.slice(0, 7)
-				setBooks(randomBooks)
-				// setBooks(data)
+				setBooks(data)
 			})
 			.catch(err => console.error('Błąd fetch:', err))
 	}, [])

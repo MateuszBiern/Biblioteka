@@ -1,4 +1,3 @@
-/* stylelint-disable-next-line property-no-vendor-prefix */
 .carusel {
 	padding: 20px 0;
 	width: 90vw;
@@ -15,11 +14,11 @@
 
 .carusel-container {
 	display: flex;
-	align-items: flex-start; /* nie będzie skakać przy zmianie wysokości */
+	align-items: center;
 	justify-content: center;
 	gap: 15px;
 	margin-bottom: 25px;
-	min-height: 360px; /* stała wysokość sekcji */
+	min-height: 250px;
 	user-select: none;
 	width: 100%;
 }
@@ -34,10 +33,8 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: space-between;
 	flex: 1;
 	max-width: 30%;
-	min-height: 320px; /* stała wysokość karty */
 }
 
 .book-current {
@@ -58,63 +55,57 @@
 	transform: scale(0.9);
 }
 
-.book-card img,
-.book-placeholder {
-	width: 120px;
-	height: 180px;
+.book-card img {
+	width: 100%;
+	max-width: 120px;
+	height: 160px;
 	object-fit: cover;
 	border-radius: 6px;
 	margin-bottom: 10px;
 	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-.book-current img,
-.book-current .book-placeholder {
-	width: 140px;
-	height: 200px;
+.book-current img {
+	max-width: 140px;
+	height: 190px;
 }
 
 .book-placeholder {
+	width: 100%;
+	max-width: 120px;
+	height: 160px;
 	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	border-radius: 6px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	font-size: 2rem;
+	margin-bottom: 10px;
 	color: white;
+}
+
+.book-current .book-placeholder {
+	max-width: 140px;
+	height: 190px;
 }
 
 .book-info {
 	text-align: center;
 	width: 100%;
-	min-height: 60px; /* stała przestrzeń pod tytuł + przycisk */
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-}
-
-.book-info h2,
-.book-info h3 {
-	margin: 0;
-	color: #ffffff;
-	line-height: 1.2;
-	min-height: 2.4em; /* równa wysokość tytułów */
-	overflow: hidden;
-	text-overflow: ellipsis;
-	display: -webkit-box;
-
-	-webkit-line-clamp: 2; /* max 2 linie */
-	line-clamp: 2;
-
-	-webkit-box-orient: vertical;
 }
 
 .book-info h2 {
 	font-size: 1.6rem;
-	margin-bottom: 10px;
+	margin: 0 0 10px 0;
+	color: #ffffff;
+	line-height: 1.2;
 }
 
 .book-info h3 {
 	font-size: 0.9rem;
+	margin: 0;
+	color: #ffffff;
+	line-height: 1.2;
 }
 
 .read-btn {
@@ -127,7 +118,6 @@
 	font-size: 0.8rem;
 	transition: background 0.3s ease;
 	width: 80%;
-	margin: 0 auto;
 }
 
 .read-btn:hover {
@@ -193,7 +183,7 @@
 	margin: 0 5vw;
 }
 
-/* --- RESPONSYWNOŚĆ --- */
+/* Responsywność */
 @media (max-width: 768px) {
 	.carusel {
 		width: 90vw;
@@ -203,8 +193,6 @@
 	.carusel-container {
 		flex-direction: column;
 		gap: 15px;
-		min-height: auto;
-		align-items: center;
 	}
 
 	.book-prev,
@@ -215,11 +203,9 @@
 	.book-current {
 		transform: scale(1);
 		max-width: 80%;
-		min-height: 320px;
 	}
 
 	.book-card {
 		max-width: 80%;
-		min-height: 320px;
 	}
 }

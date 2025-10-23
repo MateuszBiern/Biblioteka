@@ -79,7 +79,9 @@ const ChapterPage: React.FC = () => {
 
 	return (
 		<div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
-			<h1>{chapter.title}</h1>
+			<h1>
+				Rozdział {currentIndex + 1}: {chapter.title}
+			</h1>
 
 			<div style={{ background: '#fafafa', padding: '15px', borderRadius: '8px', whiteSpace: 'pre-line' }}>
 				{chapter.content || 'Brak treści'}

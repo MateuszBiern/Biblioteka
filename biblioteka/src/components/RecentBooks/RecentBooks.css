@@ -1,0 +1,68 @@
+.recent-books-container {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	padding: 20px;
+	align-items: center; /* cała lista na środku strony */
+}
+
+.recent-book-item {
+	display: flex;
+	flex-direction: column; /* tytuł na górze */
+	background-color: #f9f9f9;
+	border-radius: 10px;
+	padding: 15px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+	width: 600px; /* szerokość karty */
+}
+
+.recent-book-title {
+	font-size: 20px; /* większa czcionka tytułu */
+	font-weight: 600;
+	text-align: center;
+	margin-bottom: 15px;
+	width: 100%; /* cały wiersz */
+}
+
+.recent-book-main {
+	display: flex;
+	gap: 20px;
+	align-items: center; /* wyśrodkowanie pionowe kolumny okładka / rozdziały */
+}
+
+.recent-book-link {
+	text-decoration: none;
+	color: inherit;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 140px; /* szerokość lewej kolumny */
+	min-height: 220px;
+}
+
+.recent-book-cover {
+	width: 140px;
+	height: 200px;
+	background-color: #eee;
+	border-radius: 8px;
+	background-size: cover;
+	background-position: center;
+}
+
+.recent-book-chapters {
+	display: flex;
+	flex-direction: column;
+	gap: 8px; /* większy odstęp między rozdziałami */
+	justify-content: center; /* wyśrodkowanie pionowe kolumny rozdziałów */
+}
+
+.recent-book-chapter-link {
+	font-size: 16px; /* większe literki dla rozdziałów */
+	color: #555;
+	text-decoration: none;
+}
+
+.recent-book-no-chapters {
+	font-size: 16px; /* większe literki dla informacji "Brak rozdziałów" */
+	color: #999;
+}
