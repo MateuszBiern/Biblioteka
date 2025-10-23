@@ -1,5 +1,0 @@
-// cd /d/react/translate/backend    - node server.js
-// cd /d/react/translate/frontend/tlumacz npm run dev
-///d/react/biblioteka npm run dev
-//http://localhost/phpmyadmin/
-// http://localhost/biblioteka/import_json.php
