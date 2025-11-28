@@ -2,10 +2,10 @@
 import { useState } from 'react'
 
 export default function App() {
-	const [bookId, setBookId] = useState('16')
-	const [baseUrl, setBaseUrl] = useState('https://www.fanmtl.com/novel/re-evolution-online')
-	const [fromChapter, setFromChapter] = useState('1')
-	const [toChapter, setToChapter] = useState('2')
+	const [bookId, setBookId] = useState('')
+	const [baseUrl, setBaseUrl] = useState('wpisz link z fanmtla tutaj')
+	const [fromChapter, setFromChapter] = useState('')
+	const [toChapter, setToChapter] = useState('')
 	const [preserve, setPreserve] = useState(true)
 	const [log, setLog] = useState<string[]>([])
 	const [running, setRunning] = useState(false)

@@ -28,4 +28,4 @@ yarn-error.log*
 Thumbs.db
 
 # package-lock.json z głównego folderu (jeśli nie ma tam package.json)
-package-lock.json
+package-lock.jsonnode_modules/

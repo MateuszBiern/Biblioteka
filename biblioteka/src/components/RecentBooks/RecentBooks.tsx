@@ -48,7 +48,7 @@ const RecentBooks: React.FC = () => {
 	return (
 		<div className="recent-books-container">
 			<div className="ostatnie">
-				<h1>ostatnio dodane</h1>{' '}
+				<h1>Ostatnio Dodane</h1>{' '}
 			</div>
 
 			{books.map(book => (

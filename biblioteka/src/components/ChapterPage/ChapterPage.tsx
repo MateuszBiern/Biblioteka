@@ -78,10 +78,11 @@ const ChapterPage: React.FC = () => {
 	const nextChapter = chapterList[currentIndex + 1]
 
 	return (
-		<div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+		<div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto', color: 'white' }}>
 			<h1>{chapter.title}</h1>
 
-			<div style={{ background: '#fafafa', padding: '15px', borderRadius: '8px', whiteSpace: 'pre-line' }}>
+			<div
+				style={{ background: '#1F2129', padding: '15px', borderRadius: '8px', whiteSpace: 'pre-line', color: 'white' }}>
 				{chapter.content || 'Brak treści'}
 			</div>
 
@@ -102,7 +103,7 @@ const ChapterPage: React.FC = () => {
 				)}
 
 				<Link to={`/book/${chapter.book_id}`}>
-					<button>📚 Lista rozdziałów</button>
+					<button> Lista rozdziałów</button>
 				</Link>
 
 				{nextChapter ? (

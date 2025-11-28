@@ -1,29 +1,118 @@
 /* src/components/Header.css */
+
 .header {
-	background-color: #1a1a1a; /* Ciemny odcień szarości */
+	background-color: #1a1a1a;
 	color: #fff;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	padding: 10px 20px;
+	position: relative;
+	z-index: 10; /* 🔹 header ma własny kontekst */
 }
 
 .logo img {
 	height: 40px;
 }
 
+/* Hamburger – zawsze widoczny */
+.hamburger {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	width: 28px;
+	height: 20px;
+	background: none;
+	border: none;
+	cursor: pointer;
+	z-index: 1;
+}
+
+.hamburger span {
+	height: 3px;
+	width: 100%;
+	background: #fff;
+	border-radius: 2px;
+	transition: all 0.3s ease;
+}
+
+/* Animacja otwartego hamburgera */
+.hamburger.open span:nth-child(1) {
+	transform: rotate(45deg) translateY(8px);
+}
+.hamburger.open span:nth-child(2) {
+	opacity: 0;
+}
+.hamburger.open span:nth-child(3) {
+	transform: rotate(-45deg) translateY(-8px);
+}
+
+/* Menu */
+.nav {
+	position: absolute;
+	top: 60px;
+	right: 20px;
+	background-color: #2a2a2a;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	padding: 15px;
+	border-radius: 10px;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+	min-width: 180px;
+	align-items: center;
+	opacity: 0;
+	pointer-events: none;
+	transform: translateY(-10px);
+	transition: all 0.3s ease;
+}
+
+.nav.active {
+	opacity: 1;
+	pointer-events: auto;
+	transform: translateY(0);
+	z-index: 1;
+}
+
+/* Linki */
 .nav a {
-	color: #fff;
+	color: #ffffff;
+	text-align: center;
 	text-decoration: none;
-	margin-left: 20px;
 	font-weight: bold;
+	padding: 10px 0;
+	width: 100%;
+
+	transition: color 0.2s ease;
 }
 
 .nav a:hover {
-	text-decoration: underline;
+	color: #3498db;
+	text-decoration: none;
 }
 
 a {
 	text-decoration: none;
 	color: inherit;
+}
+
+/* Przyciski */
+.login-btn,
+.logout-btn {
+	background: #3498db;
+	color: white;
+	border: none;
+	padding: 8px 15px;
+	border-radius: 6px;
+	cursor: pointer;
+	font-weight: 600;
+	transition: background 0.2s ease;
+	width: auto; /* 🔹 już nie na całą szerokość */
+	text-align: center; /* 🔹 tekst wyśrodkowany */
+	margin-top: 0; /* 🔹 usuń odstęp od góry */
+}
+
+.login-btn:hover,
+.logout-btn:hover {
+	background: #2980b9;
 }

@@ -1,0 +1,84 @@
+/* 1. KORYGUJE POZIOME PRZEWIJANIE DLA CAŁEJ STRONY */
+body {
+	overflow-x: hidden;
+	padding: 0;
+	margin: 0;
+}
+
+/* 2. ZAPEWNIA, ŻE PADDING I BORDER NIE POWIĘKSZAJĄ ELEMENTÓW */
+* {
+	box-sizing: border-box;
+}
+.home-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: #0f1116;
+	min-height: 100vh;
+	color: #ecf0f1;
+	padding-bottom: 40px;
+}
+
+/* KARUZELA */
+.home-carusel {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	margin-bottom: 50px;
+}
+
+/* ŚRODKOWA CZĘŚĆ STRONY */
+.home-content {
+	display: flex;
+	width: 90%;
+	max-width: 1400px;
+	gap: 40px;
+	justify-content: space-between;
+	align-items: flex-start;
+}
+
+/* LEWA STRONA (Ostatnie książki) */
+.home-left {
+	flex: 3;
+	display: flex;
+	flex-direction: column; /* już jest */
+	align-items: center;
+	gap: 20px; /* dodaj odstęp między RandomBook a RandomBook2 */
+}
+
+/* PRAWA STRONA (Ranking) */
+.home-right {
+	flex: 1;
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	background-color: #1b1d23;
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+@media (max-width: 600px) {
+	.home-content {
+		flex-direction: column;
+		align-items: center;
+		gap: 20px; /* odstęp między sekcjami */
+		width: calc(100% - 20px); /* 10px margines po bokach */
+		margin: 0 10px;
+	}
+
+	.home-left {
+		width: 100%;
+		flex: none;
+	}
+
+	.home-left > * {
+		width: 100%; /* RandomBook i RandomBook2 zajmują całą szerokość */
+		max-width: 400px; /* można ograniczyć, żeby nie były za duże */
+	}
+
+	.home-right {
+		width: 100%;
+		margin-top: 20px;
+		padding: 15px;
+	}
+}

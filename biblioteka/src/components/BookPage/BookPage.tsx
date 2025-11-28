@@ -6,7 +6,7 @@ import BookRating from '../BookRating/BookRating'
 
 type Chapter = { id: number; title: string; book_id: number }
 type Book = {
-	image: any
+	image?: string
 	id: number
 	title: string
 	author: string
@@ -25,87 +25,82 @@ const BookPage: React.FC = () => {
 	const [chapterLoading, setChapterLoading] = useState(false)
 	const [error, setError] = useState<string | null>(null)
 
-	// Pobierz książkę i listę rozdziałów
+	const [loggedUserId, setLoggedUserId] = useState<number | null>(null)
+	const [currentPage, setCurrentPage] = useState(1)
+	const chaptersPerPage = 100
+
+	const indexOfLastChapter = currentPage * chaptersPerPage
+	const indexOfFirstChapter = indexOfLastChapter - chaptersPerPage
+	const currentChapters = chapters.slice(indexOfFirstChapter, indexOfLastChapter)
+	const totalPages = Math.ceil(chapters.length / chaptersPerPage)
+
+	// Pobierz userId przy pierwszym renderze
+	useEffect(() => {
+		const storedUserId = localStorage.getItem('userId')
+		if (storedUserId) setLoggedUserId(Number(storedUserId))
+	}, [])
+
+	// Pobierz książkę i rozdziały
 	useEffect(() => {
 		if (!id) return
-
 		setLoading(true)
 		setError(null)
 
 		const fetchBook = fetch(`http://localhost/biblioteka/books.php`)
-			.then(res => {
-				if (!res.ok) throw new Error('Błąd sieci')
-				return res.json()
-			})
+			.then(res => res.json())
 			.then(data => {
 				const found = data.find((b: any) => Number(b.id) === Number(id))
-				if (found) {
-					setBook(found)
-				} else {
-					throw new Error('Książka nie znaleziona')
-				}
+				if (found) setBook(found)
+				else throw new Error('Książka nie znaleziona')
 			})
 
 		const fetchChapters = fetch(`http://localhost/biblioteka/book_chapters.php?bookId=${id}`)
-			.then(res => {
-				if (!res.ok) throw new Error('Błąd sieci')
-				return res.json()
-			})
+			.then(res => res.json())
 			.then(data => setChapters(data || []))
 
-		// Czekaj na oba zapytania
 		Promise.all([fetchBook, fetchChapters])
-			.catch(err => {
-				console.error('Błąd fetch:', err)
-				setError(err.message || 'Błąd pobierania danych')
-			})
+			.catch(err => setError(err.message || 'Błąd pobierania danych'))
 			.finally(() => setLoading(false))
 	}, [id])
-
-	// Pobierz treść wybranego chaptera
+	// BookPage.tsx
 	useEffect(() => {
-		if (!chapterId) {
+		const handleStorageChange = () => {
+			const storedUserId = localStorage.getItem('userId')
+			if (storedUserId) setLoggedUserId(Number(storedUserId))
+		}
+
+		// nasłuchuj zmian w localStorage
+		window.addEventListener('storage', handleStorageChange)
+
+		return () => {
+			window.removeEventListener('storage', handleStorageChange)
+		}
+	}, [])
+
+	// Pobierz treść rozdziału
+	useEffect(() => {
+		if (!chapterId || chapters.length === 0) {
 			setChapter(null)
 			return
 		}
-
-		// Czekaj aż rozdziały się załadują
-		if (chapters.length === 0) {
-			return
-		}
-
 		setChapterLoading(true)
 		setError(null)
 
-		// Najpierw znajdź info o rozdziale z już pobranej listy
-		const chapterInfo = chapters.find(ch => ch.id === parseInt(chapterId))
-
+		const chapterInfo = chapters.find(ch => ch.id === Number(chapterId))
 		if (!chapterInfo) {
-			setError('Rozdział nie znaleziony w liście')
+			setError('Rozdział nie znaleziony')
 			setChapterLoading(false)
-			setChapter(null)
 			return
 		}
 
 		fetch(`http://localhost/biblioteka/chapter_content.php?chapterId=${chapterId}`)
-			.then(res => {
-				if (!res.ok) throw new Error('Błąd sieci')
-				return res.json()
-			})
+			.then(res => res.json())
 			.then(data => {
-				if (data && data.content) {
-					setChapter({
-						id: data.id,
-						title: chapterInfo.title,
-						content: data.content,
-					})
-				} else {
-					throw new Error('Brak treści rozdziału')
-				}
+				if (data && data.content) setChapter({ id: data.id, title: chapterInfo.title, content: data.content })
+				else throw new Error('Brak treści rozdziału')
 			})
 			.catch(err => {
-				console.error('Błąd fetch chaptera:', err)
-				setError('Błąd pobierania chaptera')
+				setError(err.message || 'Błąd pobierania rozdziału')
 				setChapter(null)
 			})
 			.finally(() => setChapterLoading(false))
@@ -117,82 +112,83 @@ const BookPage: React.FC = () => {
 
 	return (
 		<div className="book-page-body">
-			<div style={{ padding: '20px' }}>
+			<div className="book-page-container">
 				<h2>{book.title}</h2>
-				<div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
-					<div>
-						{book.cover_image && (
-							<img
-								src={book.cover_image}
-								alt={`Okładka ${book.title}`}
-								style={{
-									maxWidth: '200px',
-									maxHeight: '300px',
-									marginBottom: '15px',
-									border: '1px solid #ddd',
-									borderRadius: '5px',
-								}}
-							/>
-						)}
-					</div>
+
+				<div className="book-header">
+					{book.cover_image && <img src={book.cover_image} alt={book.title} className="book-cover" />}
+					{book.description && <p className="book-description">{book.description}</p>}
 				</div>
-				<BookRating bookId={book.id} />
-				<div style={{ marginTop: '10px', display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
-					{book.tags &&
-						book.tags.map(tag => (
-							<Link
-								key={tag}
-								to={`/SearchPage?tags=${tag}`}
-								style={{
-									background: '#4CAF50',
-									color: 'white',
-									padding: '4px 12px',
-									borderRadius: '20px',
-									fontSize: '12px',
-									fontWeight: '500',
-									textDecoration: 'none',
-								}}>
-								{tag}
-							</Link>
-						))}
+
+				{/* BookRating zawsze renderowany, userId opcjonalny */}
+				<BookRating key={loggedUserId ?? 'guest'} bookId={book.id} userId={loggedUserId ?? undefined} />
+
+				<div className="book-tags">
+					{book.tags.map(tag => (
+						<Link key={tag} to={`/SearchPage?tags=${tag}`} className="tag">
+							{tag}
+						</Link>
+					))}
 				</div>
+
 				<h3>Rozdziały:</h3>
 				{chapters.length > 0 ? (
-					<ul>
-						{chapters.map(ch => (
-							<li key={ch.id}>
-								<Link to={`/book/${book.id}/chapter/${ch.id}`}>{ch.title}</Link>
-							</li>
-						))}
-					</ul>
+					<>
+						<table className="chapter-table">
+							<thead>
+								<tr>
+									<th>Tytuł rozdziału</th>
+								</tr>
+							</thead>
+							<tbody>
+								{currentChapters.map(ch => (
+									<tr key={ch.id}>
+										<td>
+											<Link to={`/book/${book.id}/chapter/${ch.id}`}>{ch.title}</Link>
+										</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+
+						{totalPages > 1 && (
+							<div className="pagination">
+								<button
+									className="page-btn1"
+									onClick={() => setCurrentPage(prev => prev - 1)}
+									disabled={currentPage === 1}>
+									Poprzednia
+								</button>
+								<span>
+									Strona {currentPage} / {totalPages}
+								</span>
+								<button
+									className="page-btn"
+									onClick={() => setCurrentPage(prev => prev + 1)}
+									disabled={currentPage === totalPages}>
+									Następna
+								</button>
+							</div>
+						)}
+					</>
 				) : (
 					<p>Brak dostępnych rozdziałów</p>
 				)}
 
-				{/* Stan ładowania dla chaptera */}
-				{chapterLoading && (
-					<div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#fff3cd', border: '1px solid #ffeaa7' }}>
-						<p>Ładowanie treści rozdziału...</p>
-					</div>
-				)}
-
-				{/* Treść rozdziału */}
+				{chapterLoading && <div className="chapter-loading">Ładowanie treści rozdziału...</div>}
 				{chapter && !chapterLoading && (
-					<div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#f0f0f0' }}>
+					<div className="chapter-content">
 						<h4>{chapter.title}</h4>
 						<p style={{ whiteSpace: 'pre-line' }}>{chapter.content}</p>
 					</div>
 				)}
 
-				{/* Błąd przy ładowaniu rozdziału */}
-				{error && chapterId && !chapterLoading && (
-					<div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#ffebee', border: '1px solid #ef5350' }}>
-						<p>{error}</p>
-					</div>
-				)}
+				{error && chapterId && !chapterLoading && <div className="chapter-error">{error}</div>}
 
-				<div style={{ marginTop: '20px' }}>
-					<Link to="/">⬅ Wróć do karuzeli</Link>
+				<div className="back-link-wrapper">
+					<Link to="/" className="back-link">
+						Wróć do karuzeli
+					</Link>
 				</div>
 			</div>
 		</div>

@@ -42,7 +42,7 @@
 
 .book-current {
 	transform: scale(1.05);
-	z-index: 10;
+	z-index: 1;
 	border: 2px solid #3498db;
 }
 

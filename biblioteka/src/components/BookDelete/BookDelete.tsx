@@ -228,7 +228,7 @@ const BookDelete: React.FC = () => {
 	if (!selectedBook) {
 		return (
 			<div className="book-manager">
-				<h1>📚 Zarządzanie książkami</h1>
+				<h1> Zarządzanie książkami</h1>
 				<p>Wybierz książkę do zarządzania:</p>
 
 				<div className="books-grid">
@@ -257,7 +257,7 @@ const BookDelete: React.FC = () => {
 									deleteBook(book.id)
 								}}
 								className="delete-book-btn">
-								🗑️ Usuń
+								Usuń
 							</button>
 						</div>
 					))}
@@ -274,7 +274,7 @@ const BookDelete: React.FC = () => {
 			{/* Nagłówek z powrotem do listy */}
 			<div className="book-header">
 				<button onClick={() => setSelectedBook(null)} className="back-btn">
-					← Wróć do listy
+					Wróć do listy
 				</button>
 
 				<div className="book-title-section">
@@ -287,7 +287,7 @@ const BookDelete: React.FC = () => {
 								className="title-input"
 							/>
 							<button onClick={updateBookTitle} className="save-title-btn">
-								💾 Zapisz
+								Zapisz
 							</button>
 							<button
 								onClick={() => {
@@ -295,21 +295,21 @@ const BookDelete: React.FC = () => {
 									setTempBookTitle(selectedBook.title)
 								}}
 								className="cancel-title-btn">
-								❌ Anuluj
+								Anuluj
 							</button>
 						</div>
 					) : (
 						<div className="title-display">
-							<h1 className="book-title-main">📖 {selectedBook.title}</h1>
+							<h1 className="book-title-main"> {selectedBook.title}</h1>
 							<button onClick={() => setEditingBookTitle(true)} className="edit-title-btn">
-								✏️ Edytuj tytuł
+								Edytuj tytuł
 							</button>
 						</div>
 					)}
 				</div>
 
 				<button onClick={() => deleteBook(selectedBook.id)} className="delete-book-main-btn">
-					🗑️ Usuń książkę
+					Usuń książkę
 				</button>
 			</div>
 
@@ -326,7 +326,7 @@ const BookDelete: React.FC = () => {
 						/>
 						<div className="description-actions">
 							<button onClick={updateBookDescription} className="save-description-btn">
-								💾 Zapisz
+								Zapisz
 							</button>
 							<button
 								onClick={() => {
@@ -334,7 +334,7 @@ const BookDelete: React.FC = () => {
 									setTempBookDescription(selectedBook.description || '')
 								}}
 								className="cancel-description-btn">
-								❌ Anuluj
+								Anuluj
 							</button>
 						</div>
 					</div>
@@ -342,7 +342,7 @@ const BookDelete: React.FC = () => {
 					<div className="description-display">
 						<p>{selectedBook.description || 'Brak opisu'}</p>
 						<button onClick={() => setEditingBookDescription(true)} className="edit-description-btn">
-							✏️ Edytuj opis
+							Edytuj opis
 						</button>
 					</div>
 				)}
@@ -353,11 +353,11 @@ const BookDelete: React.FC = () => {
 				<span className="selected-count">Zaznaczono: {selectedChapters.length} rozdziałów</span>
 				{selectedChapters.length > 0 && (
 					<button onClick={deleteSelectedChapters} className="delete-selected-btn">
-						🗑️ Usuń zaznaczone
+						Usuń zaznaczone
 					</button>
 				)}
 				<button onClick={() => setSelectedChapters([])} className="clear-selection-btn">
-					❌ Wyczyść zaznaczenie
+					Wyczyść zaznaczenie
 				</button>
 			</div>
 
@@ -386,7 +386,7 @@ const BookDelete: React.FC = () => {
 								<button
 									onClick={() => setEditingChapter(editingChapter === chapter.id ? null : chapter.id)}
 									className="edit-chapter-btn">
-									{editingChapter === chapter.id ? '❌ Anuluj' : '✏️ Edytuj'}
+									{editingChapter === chapter.id ? ' Anuluj' : ' Edytuj'}
 								</button>
 							</div>
 						</div>
@@ -445,10 +445,10 @@ const BookDelete: React.FC = () => {
 													updateChapter(chapter.id, 'content', chapter.content)
 												}}
 												className="save-chapter-btn">
-												💾 Zapisz zmiany
+												Zapisz zmiany
 											</button>
 											<button onClick={() => setEditingChapter(null)} className="cancel-edit-btn">
-												❌ Anuluj
+												Anuluj
 											</button>
 										</div>
 

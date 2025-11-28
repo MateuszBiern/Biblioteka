@@ -1,6 +1,304 @@
+/* src/components/BookPage.css */
+
+/* Całe body strony */
 .book-page-body {
-	background-color: #ffffff;
 	min-height: 100vh;
-	margin: 0;
+	background: linear-gradient(135deg, #0e0e0e 0%, #1c1c1c 100%);
+	color: #fff;
+	font-family: 'Inter', sans-serif;
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	padding: 40px 20px;
+}
+
+/* Kontener główny */
+.book-page-body > div {
+	background: rgba(255, 255, 255, 0.05);
+	backdrop-filter: blur(8px);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 16px;
+	padding: 30px;
+	max-width: 900px;
+	width: 100%;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+	transition: transform 0.3s ease;
+}
+
+.book-page-body > div:hover {
+	transform: translateY(-3px);
+}
+
+/* Nagłówek książki */
+h2 {
+	font-size: 2rem;
+	font-weight: 700;
+	margin-bottom: 15px;
+	color: #4fa3ff;
+}
+
+/* Nagłówek h3 (rozdziały) */
+h3 {
+	margin-top: 20px;
+	margin-bottom: 10px;
+	color: #4fa3ff;
+}
+
+/* Obrazek okładki */
+.book-header {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+}
+
+.book-cover {
+	border-radius: 10px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+	max-width: 200px;
+	height: auto;
+	transition: transform 0.3s ease;
+}
+
+.book-cover:hover {
+	transform: scale(1.03);
+}
+
+.book-description {
+	font-size: 16px;
+	color: #ddd;
+	line-height: 1.5;
+	flex: 1;
+}
+
+/* Tag */
+.book-tags {
+	margin-top: 10px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 5px;
+}
+
+.book-tags .tag {
+	display: inline-block;
+	background: #4fa3ff;
+	color: #fff;
+	padding: 5px 12px;
+	border-radius: 20px;
+	font-size: 12px;
+	font-weight: 600;
+	transition: background 0.3s ease;
+	text-decoration: none;
+}
+
+.book-tags .tag:hover {
+	background: #1e6ad6;
+}
+
+/* Tabela rozdziałów */
+.chapter-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 15px;
+}
+
+.chapter-table th,
+.chapter-table td {
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	padding: 10px;
+	text-align: left;
+	color: #fff;
+}
+
+.chapter-table th {
+	background-color: rgba(255, 255, 255, 0.1);
+	font-weight: 600;
+}
+
+.chapter-table tr:nth-child(even) {
+	background-color: rgba(255, 255, 255, 0.05);
+}
+
+.chapter-table tr:hover {
+	background-color: rgba(79, 163, 255, 0.2);
+}
+
+.chapter-table a {
+	color: #4fa3ff;
+	text-decoration: none;
+	font-weight: 500;
+}
+
+.chapter-table a:hover {
+	text-decoration: underline;
+}
+
+/* Treść rozdziału */
+.chapter-content {
+	background: rgba(255, 255, 255, 0.05);
 	padding: 20px;
+	border-radius: 10px;
+	margin-top: 20px;
+	line-height: 1.6;
+	color: #ddd;
+	transition: background 0.3s ease;
+}
+
+.chapter-content:hover {
+	background: rgba(255, 255, 255, 0.08);
+}
+
+/* Paginacja */
+.pagination {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 15px;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+
+/* Przyciski paginacji */
+.pagination .btn1,
+.pagination .btn2 {
+	background-color: #4fa3ff; /* domyślny niebieski */
+	color: #fff;
+	border: none;
+	padding: 6px 12px;
+	border-radius: 6px;
+	cursor: pointer;
+	font-weight: 600;
+	transition: background 0.2s ease, color 0.2s ease;
+	font-family: inherit;
+	font-size: 14px;
+	text-align: center;
+}
+
+.pagination .btn1:hover:not(:disabled),
+.pagination .btn2:hover:not(:disabled) {
+	background-color: #1e6ad6 !important; /* ciemniejszy niebieski */
+}
+
+.pagination .btn1:disabled,
+.pagination .btn2:disabled {
+	background-color: rgba(0, 123, 255, 0.4); /* szary dla disabled */
+	cursor: not-allowed;
+	color: #fff;
+}
+
+.pagination span {
+	color: #fff;
+	font-weight: 500;
+}
+/* Link powrotny */
+.back-link-wrapper {
+	margin-top: 20px;
+}
+
+.back-link {
+	display: inline-block;
+	color: #4fa3ff;
+	font-weight: 600;
+	text-decoration: none;
+	transition: color 0.3s ease;
+}
+
+.back-link:hover {
+	color: #1e6ad6;
+}
+@media (max-width: 600px) {
+	/* Ustawienia dla całego ciała strony (book-page-body) */
+	.book-page-body {
+		padding: 20px 10px; /* Zmniejszenie paddingu, dodanie marginesu 10px po bokach */
+		align-items: stretch; /* Rozciągnięcie głównego kontenera na boki */
+	}
+
+	/* Kontener główny (który ma max-width: 900px) */
+	.book-page-body > div {
+		padding: 15px; /* Mniejszy padding wewnętrzny */
+		border-radius: 10px;
+		/* Wymuszenie pełnej szerokości minus 20px marginesów z .book-page-body */
+		max-width: none;
+		width: 100%;
+		/* Upewnienie się, że box-sizing jest poprawny (zakładamy, że * { box-sizing: border-box; } jest ustawione globalnie) */
+	}
+
+	/* Nagłówki */
+	h2 {
+		font-size: 1.5rem; /* Mniejszy tytuł */
+		text-align: center; /* Wyśrodkowanie tytułu */
+		margin-bottom: 10px;
+	}
+	h3 {
+		font-size: 1.2rem;
+	}
+
+	/* Nagłówek książki i okładka (Book Header) */
+	.book-header {
+		flex-direction: column; /* Układ pionowy: Okładka nad opisem */
+		align-items: center; /* Wyśrodkowanie okładki */
+		gap: 15px;
+	}
+
+	.book-cover {
+		max-width: 150px; /* Mniejsza okładka */
+		height: auto;
+	}
+
+	.book-description {
+		font-size: 14px;
+		text-align: center; /* Wyśrodkowanie opisu (opcjonalnie, można zostawić left) */
+	}
+
+	/* Tag */
+	.book-tags {
+		justify-content: center; /* Wyśrodkowanie tagów */
+		margin-top: 15px;
+	}
+	.book-tags .tag {
+		font-size: 11px;
+		padding: 4px 10px;
+	}
+
+	/* Tabela Rozdziałów (Chapter Table) */
+	.chapter-table {
+		/* Całkowite ukrycie tabeli (częsta praktyka dla trudnych tabel) */
+		display: block;
+		overflow-x: auto; /* LUB Wymuszenie poziomego przewijania tabeli */
+		white-space: nowrap; /* Zabezpieczenie, aby treść nie łamała wierszy */
+		margin-top: 10px;
+	}
+
+	.chapter-table th,
+	.chapter-table td {
+		white-space: nowrap; /* Zapobiega zawijaniu się tekstu w komórkach */
+		padding: 8px;
+		font-size: 14px;
+	}
+
+	/* Treść rozdziału */
+	.chapter-content {
+		padding: 15px;
+		font-size: 14px;
+		line-height: 1.5;
+	}
+
+	/* Paginacja (Paginacja) */
+	.pagination {
+		gap: 8px;
+		margin-top: 15px;
+	}
+	.pagination .btn1,
+	.pagination .btn2 {
+		padding: 8px 10px;
+		font-size: 13px;
+	}
+	.pagination span {
+		font-size: 14px;
+	}
+
+	/* Link powrotny */
+	.back-link-wrapper {
+		text-align: center;
+		margin-top: 15px;
+	}
 }

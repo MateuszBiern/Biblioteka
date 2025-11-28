@@ -2,23 +2,28 @@
 import React, { useState, useEffect } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 
+import './SearchPage.css'
+
 type Book = {
 	description: string
 	id: number
 	title: string
 	author: string
 	tags: string[]
-	cover_image?: string // DODANE
+	cover_image?: string
 }
+
+const ITEMS_PER_PAGE = 10
 
 const SearchPage: React.FC = () => {
 	const [searchParams, setSearchParams] = useSearchParams()
 	const [books, setBooks] = useState<Book[]>([])
 	const [allTags, setAllTags] = useState<string[]>([])
 	const [selectedTags, setSelectedTags] = useState<string[]>([])
+	const [titleSearch, setTitleSearch] = useState('')
+	const [currentPage, setCurrentPage] = useState(1)
 	const [loading, setLoading] = useState(true)
 
-	// Pobierz książki i tagi
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
@@ -26,10 +31,8 @@ const SearchPage: React.FC = () => {
 					fetch('http://localhost/biblioteka/books.php'),
 					fetch('http://localhost/biblioteka/tags.php'),
 				])
-
 				const booksData = await booksRes.json()
 				const tagsData = await tagsRes.json()
-
 				setBooks(booksData)
 				setAllTags(tagsData.map((tag: any) => tag.name))
 			} catch (error) {
@@ -38,170 +41,144 @@ const SearchPage: React.FC = () => {
 				setLoading(false)
 			}
 		}
-
 		fetchData()
 	}, [])
 
-	// Obsługa URL - jak są tagi w URL, to je zaznacz
 	useEffect(() => {
 		const urlTags = searchParams.get('tags')
-		if (urlTags) {
-			setSelectedTags(urlTags.split(','))
-		}
+		if (urlTags) setSelectedTags(urlTags.split(','))
 	}, [searchParams])
 
-	// Filtruj książki po tagach
-	const filteredBooks =
-		selectedTags.length > 0 ? books.filter(book => selectedTags.every(tag => book.tags.includes(tag))) : books
+	const filteredBooks = books.filter(book => {
+		const matchesTags = selectedTags.length === 0 || selectedTags.every(tag => book.tags.includes(tag))
+		const matchesTitle = book.title.toLowerCase().includes(titleSearch.toLowerCase())
+		return matchesTags && matchesTitle
+	})
+
+	const totalPages = Math.ceil(filteredBooks.length / ITEMS_PER_PAGE)
+	const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
+	const endIndex = startIndex + ITEMS_PER_PAGE
+	const paginatedBooks = filteredBooks.slice(startIndex, endIndex)
 
 	const toggleTag = (tag: string) => {
 		const newTags = selectedTags.includes(tag) ? selectedTags.filter(t => t !== tag) : [...selectedTags, tag]
-
 		setSelectedTags(newTags)
+		setSearchParams(newTags.length > 0 ? { tags: newTags.join(',') } : {})
+		setCurrentPage(1) // reset strony
+	}
 
-		// Aktualizuj URL
-		if (newTags.length > 0) {
-			setSearchParams({ tags: newTags.join(',') })
-		} else {
-			setSearchParams({})
-		}
+	const goToPage = (page: number) => {
+		if (page >= 1 && page <= totalPages) setCurrentPage(page)
+	}
+
+	const renderPagination = () => {
+		if (totalPages <= 1) return null
+		const pages: (number | string)[] = []
+
+		const visiblePages = 5
+		const half = Math.floor(visiblePages / 2)
+		let start = Math.max(1, currentPage - half)
+		let end = Math.min(totalPages, currentPage + half)
+
+		if (currentPage - half <= 0) end = Math.min(totalPages, visiblePages)
+		if (currentPage + half > totalPages) start = Math.max(1, totalPages - visiblePages + 1)
+
+		if (start > 1) pages.push(1, '...')
+		for (let i = start; i <= end; i++) pages.push(i)
+		if (end < totalPages) pages.push('...', totalPages)
+
+		return (
+			<div className="pagination">
+				<button disabled={currentPage === 1} onClick={() => goToPage(currentPage - 1)}>
+					&lt;
+				</button>
+				{pages.map((p, idx) =>
+					p === '...' ? (
+						<span key={idx} className="dots">
+							...
+						</span>
+					) : (
+						<button key={idx} className={p === currentPage ? 'active' : ''} onClick={() => goToPage(Number(p))}>
+							{p}
+						</button>
+					)
+				)}
+				<button disabled={currentPage === totalPages} onClick={() => goToPage(currentPage + 1)}>
+					&gt;
+				</button>
+			</div>
+		)
 	}
 
 	if (loading) return <div>Ładowanie...</div>
 
 	return (
-		<div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
-			<h1>🔍 Wyszukiwarka książek</h1>
+		<div className="search-page-container">
+			<h1>Wyszukiwarka książek</h1>
 
-			{/* Filtry tagów */}
-			<div style={{ marginBottom: '30px' }}>
+			<input
+				type="text"
+				className="search-input"
+				placeholder="Wpisz tytuł książki..."
+				value={titleSearch}
+				onChange={e => {
+					setTitleSearch(e.target.value)
+					setCurrentPage(1)
+				}}
+			/>
+
+			<div className="tags-filter">
 				<h3>Filtruj po tagach:</h3>
-				<div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+				<div className="tags-buttons">
 					{allTags.map(tag => (
-						<button
-							key={tag}
-							onClick={() => toggleTag(tag)}
-							style={{
-								background: selectedTags.includes(tag) ? '#4CAF50' : '#e0e0e0',
-								color: selectedTags.includes(tag) ? 'white' : 'black',
-								padding: '8px 16px',
-								border: 'none',
-								borderRadius: '20px',
-								cursor: 'pointer',
-							}}>
+						<button key={tag} className={selectedTags.includes(tag) ? 'tag-active' : ''} onClick={() => toggleTag(tag)}>
 							{tag}
 						</button>
 					))}
 				</div>
 
 				{selectedTags.length > 0 && (
-					<div style={{ marginTop: '10px' }}>
+					<div className="active-tags">
 						<small>Aktywne filtry: {selectedTags.join(', ')}</small>
 						<button
+							className="clear-tags"
 							onClick={() => {
 								setSelectedTags([])
 								setSearchParams({})
-							}}
-							style={{ marginLeft: '10px', fontSize: '12px' }}>
+								setCurrentPage(1)
+							}}>
 							Wyczyść
 						</button>
 					</div>
 				)}
 			</div>
 
-			{/* Lista książek */}
-			<div>
-				<h3>Znalezione książki ({filteredBooks.length}):</h3>
+			<h3>Znalezione książki ({filteredBooks.length}):</h3>
+			<div className="books-list">
+				{paginatedBooks.map(book => (
+					<Link key={book.id} to={`/book/${book.id}`} className="book-item">
+						{book.cover_image ? (
+							<img src={book.cover_image} alt={book.title} className="book-cover" />
+						) : (
+							<div className="book-no-cover">Brak okładki</div>
+						)}
 
-				<div style={{ display: 'grid', gap: '15px' }}>
-					{filteredBooks.map(book => (
-						<Link
-							key={book.id}
-							to={`/book/${book.id}`}
-							style={{
-								display: 'flex', // ZMIENIONE NA FLEX
-								border: '1px solid #ddd',
-								padding: '15px',
-								borderRadius: '8px',
-								textDecoration: 'none',
-								color: 'inherit',
-								cursor: 'pointer',
-								transition: 'all 0.3s ease',
-								gap: '15px', // Odstęp między zdjęciem a treścią
-							}}
-							onMouseEnter={e => {
-								e.currentTarget.style.background = '#f9f9f9'
-								e.currentTarget.style.transform = 'translateY(-2px)'
-							}}
-							onMouseLeave={e => {
-								e.currentTarget.style.background = 'white'
-								e.currentTarget.style.transform = 'translateY(0)'
-							}}>
-							{/* ZDJĘCIE PO LEWEJ */}
-							{book.cover_image ? (
-								<img
-									src={book.cover_image}
-									alt={`Okładka ${book.title}`}
-									style={{
-										width: '80px',
-										height: '120px',
-										objectFit: 'cover',
-										borderRadius: '5px',
-										flexShrink: 0, // Zapobiega zmniejszaniu zdjęcia
-									}}
-								/>
-							) : (
-								<div
-									style={{
-										width: '80px',
-										height: '120px',
-										background: '#f0f0f0',
-										display: 'flex',
-										alignItems: 'center',
-										justifyContent: 'center',
-										borderRadius: '5px',
-										flexShrink: 0,
-										color: '#999',
-										fontSize: '12px',
-										textAlign: 'center',
-									}}>
-									Brak okładki
-								</div>
+						<div className="book-info">
+							<h4>{book.title}</h4>
+							{book.description && (
+								<p>{book.description.length > 150 ? `${book.description.substring(0, 150)}...` : book.description}</p>
 							)}
-
-							{/* TREŚĆ PO PRAWEJ */}
-							<div style={{ flex: 1 }}>
-								<h4 style={{ margin: '0 0 8px 0', color: '#333' }}>{book.title}</h4>
-
-								{book.description && (
-									<p style={{ margin: '0 0 10px 0', color: '#666', fontSize: '14px' }}>
-										<strong>Opis:</strong>{' '}
-										{book.description.length > 150 ? `${book.description.substring(0, 150)}...` : book.description}
-									</p>
-								)}
-
-								{/* Tagi */}
-								<div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
-									{book.tags.map(tag => (
-										<span
-											key={tag}
-											style={{
-												background: '#3a03ffff',
-												color: 'white',
-												padding: '4px 12px',
-												borderRadius: '20px',
-												fontSize: '12px',
-												fontWeight: '500',
-											}}>
-											{tag}
-										</span>
-									))}
-								</div>
+							<div className="book-tags">
+								{book.tags.map(tag => (
+									<span key={tag}>{tag}</span>
+								))}
 							</div>
-						</Link>
-					))}
-				</div>
+						</div>
+					</Link>
+				))}
 			</div>
+
+			{renderPagination()}
 		</div>
 	)
 }

@@ -1,33 +1,41 @@
 .recent-books-container {
 	display: flex;
 	flex-direction: column;
-	gap: 20px;
-	padding: 20px;
-	align-items: center; /* cała lista na środku strony */
+	gap: 15px;
+	padding: 15px;
+	align-items: center;
+	width: 90%;
+	max-width: 600px;
+	margin: 20px auto;
+	background: #1b1d23;
+	border-radius: 10px;
+	color: #ecf0f1;
 }
 
 .recent-book-item {
 	display: flex;
-	flex-direction: column; /* tytuł na górze */
-	background-color: #f9f9f9;
+	flex-direction: column;
+	background-color: #1b1d23;
 	border-radius: 10px;
 	padding: 15px;
-	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-	width: 600px; /* szerokość karty */
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+	width: 100%;
 }
 
 .recent-book-title {
-	font-size: 20px; /* większa czcionka tytułu */
+	font-size: 1.2rem;
 	font-weight: 600;
-	text-align: center;
-	margin-bottom: 15px;
-	width: 100%; /* cały wiersz */
+	text-align: left;
+	margin-bottom: 10px;
+	border-bottom: 1px solid #2c3e50;
+	padding-bottom: 8px;
+	width: 100%;
 }
 
 .recent-book-main {
 	display: flex;
-	gap: 20px;
-	align-items: center; /* wyśrodkowanie pionowe kolumny okładka / rozdziały */
+	gap: 15px;
+	align-items: flex-start;
 }
 
 .recent-book-link {
@@ -36,33 +44,38 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	width: 140px; /* szerokość lewej kolumny */
-	min-height: 220px;
+	width: 120px; /* mniejsza okładka */
+	min-height: 180px;
 }
 
 .recent-book-cover {
-	width: 140px;
-	height: 200px;
+	width: 100%;
+	height: 180px; /* mniejsza wysokość */
 	background-color: #eee;
-	border-radius: 8px;
+	border-radius: 6px;
 	background-size: cover;
 	background-position: center;
+	margin-bottom: 8px;
 }
 
 .recent-book-chapters {
 	display: flex;
 	flex-direction: column;
-	gap: 8px; /* większy odstęp między rozdziałami */
-	justify-content: center; /* wyśrodkowanie pionowe kolumny rozdziałów */
+	gap: 6px;
+	justify-content: flex-start;
 }
 
 .recent-book-chapter-link {
-	font-size: 16px; /* większe literki dla rozdziałów */
-	color: #555;
+	font-size: 0.85rem; /* mniejszy tekst */
+	color: #bdc3c7;
 	text-decoration: none;
 }
 
+.recent-book-chapter-link:hover {
+	color: #3498db;
+}
+
 .recent-book-no-chapters {
-	font-size: 16px; /* większe literki dla informacji "Brak rozdziałów" */
+	font-size: 0.8rem; /* mniejszy tekst dla informacji */
 	color: #999;
 }
