@@ -1,17 +1,17 @@
-# 📚 System Zarządzania Treścią - Biblioteka
+#  System Zarządzania Treścią - Biblioteka
 
 Projekt inżynierski realizujący nowoczesną, trójwarstwową architekturę systemu zarządzania treścią o tematyce literackiej, zbudowany w oparciu o architekturę **Single Page Application (SPA)**.
 
 ---
 
-## 🛠 Technologie
+##  Technologie
 * **Frontend:** React (SPA)
 * **Backend:** PHP, Node.js
 * **Baza danych:** SQL (MySQL)
 
 ---
 
-## 🚀 Instrukcja uruchomienia
+##  Instrukcja uruchomienia
 
 bash
 # 1. Backend (PHP & MySQL)
@@ -35,12 +35,7 @@ cd /translate/frontend/tlumacz
 npm install
 npm run dev
 
-##### Technologie
-Frontend: React (SPA)
 
-Backend: PHP, Node.js
-
-Baza danych: SQL (MySQL)
 <img width="1848" height="924" alt="image" src="https://github.com/user-attachments/assets/58bcedd0-e7bd-43f1-bd85-e92e0b384418" />
 <img width="1869" height="918" alt="image" src="https://github.com/user-attachments/assets/f8941fe2-7fd8-407d-8c38-b5c675911838" />
 <img width="1205" height="920" alt="image" src="https://github.com/user-attachments/assets/e07aca35-97b0-4979-98f0-cb8c4f9ce92d" />
