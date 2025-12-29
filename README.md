@@ -13,7 +13,7 @@ Projekt inżynierski realizujący nowoczesną, trójwarstwową architekturę sys
 
 ## 🚀 Instrukcja uruchomienia
 
-```bash
+bash
 # 1. Backend (PHP & MySQL)
 # Zaimportuj bazę danych library.sql do PHPMyAdmin
 # Skonfiguruj serwer Apache (np. XAMPP)
