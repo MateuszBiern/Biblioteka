@@ -1,23 +1,36 @@
-# System Zarządzania Treścią Cyfrową - Biblioteka
-## Instrukcja uruchomienia
-### 1. Backend (PHP & MySQL)
-- Zaimportuj bazę danych z pliku `library.sql` do PHPMyAdmin.
-- Skonfiguruj serwer Apache (np. XAMPP).
-- Adres panelu bazy: `http://localhost/phpmyadmin/`
+# 📚 System Zarządzania Treścią - Biblioteka
 
- ### 2. Moduł główny (React)
-bash
+Projekt inżynierski realizujący nowoczesną, trójwarstwową architekturę systemu zarządzania treścią o tematyce literackiej, zbudowany w oparciu o architekturę **Single Page Application (SPA)**.
+
+---
+
+## 🛠 Technologie
+* **Frontend:** React (SPA)
+* **Backend:** PHP, Node.js
+* **Baza danych:** SQL (MySQL)
+
+---
+
+## 🚀 Instrukcja uruchomienia
+
+```bash
+# 1. Backend (PHP & MySQL)
+# Zaimportuj bazę danych library.sql do PHPMyAdmin
+# Skonfiguruj serwer Apache (np. XAMPP)
+# Adres bazy: http://localhost/phpmyadmin/
+# Import danych: http://localhost/biblioteka/import_json.php
+
+# 2. Moduł główny (React)
 cd /biblioteka
 npm install
 npm run dev
-#### 3. Moduł tłumaczeń (Translator)
-Backend (Node.js):
-Bash
+
+# 3. Moduł tłumaczeń (Translator)
+# Backend (Node.js):
 cd /translate/backend
 node server.js
 
-Frontend (React):
-Bash
+# Frontend (React):
 cd /translate/frontend/tlumacz
 npm install
 npm run dev
