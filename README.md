@@ -1,3 +1,33 @@
+# System Zarządzania Treścią Cyfrową - Biblioteka
+## Instrukcja uruchomienia
+### 1. Backend (PHP & MySQL)
+- Zaimportuj bazę danych z pliku `library.sql` do PHPMyAdmin.
+- Skonfiguruj serwer Apache (np. XAMPP).
+- Adres panelu bazy: `http://localhost/phpmyadmin/`
+
+ ### 2. Moduł główny (React)
+bash
+cd /biblioteka
+npm install
+npm run dev
+#### 3. Moduł tłumaczeń (Translator)
+Backend (Node.js):
+Bash
+cd /translate/backend
+node server.js
+
+Frontend (React):
+Bash
+cd /translate/frontend/tlumacz
+npm install
+npm run dev
+
+##### Technologie
+Frontend: React (SPA)
+
+Backend: PHP, Node.js
+
+Baza danych: SQL (MySQL)
 <img width="1848" height="924" alt="image" src="https://github.com/user-attachments/assets/58bcedd0-e7bd-43f1-bd85-e92e0b384418" />
 <img width="1869" height="918" alt="image" src="https://github.com/user-attachments/assets/f8941fe2-7fd8-407d-8c38-b5c675911838" />
 <img width="1205" height="920" alt="image" src="https://github.com/user-attachments/assets/e07aca35-97b0-4979-98f0-cb8c4f9ce92d" />
